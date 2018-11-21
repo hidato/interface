@@ -27,11 +27,13 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
     mainwidget.cpp \
-    types.cpp
+    types.cpp \
+    gridbox.cpp
 
 HEADERS += \
     mainwidget.h \
-    types.h
+    types.h \
+    gridbox.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

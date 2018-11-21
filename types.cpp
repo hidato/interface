@@ -12,9 +12,14 @@ GridMap::~GridMap()
     delete(v);
 }
 
-int &GridMap::at(int a, int b)
+int &GridMap::at(int row, int column)
 {
-    const unsigned long i = width*a + b;
+    const unsigned long i = width*row + column;
     return v->at(i);
+}
+
+int &GridMap::at(int index)
+{
+    return v->at(index);
 }
 

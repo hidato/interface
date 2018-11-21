@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "types.h"
+#include "gridbox.h"
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
@@ -33,7 +34,7 @@ public:
     QGridLayout *gridLayout;
 
     GridMap *gMap = nullptr;
-    std::vector<QLabel*> labelVector;
+    std::vector<GridBox*> labelVector;
 
     void setupUi(QWidget *Form);
     void retranslateUi(QWidget *Form);
@@ -41,6 +42,7 @@ public:
 
 public slots:
     void drawGrid();
+    void gridClick(GridBox* self);
 
 };
 

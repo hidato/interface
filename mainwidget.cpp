@@ -1,5 +1,6 @@
 #include "mainwidget.h"
 #include "mainwidget.h"
+#include <algorithm>
 
 MainWidget::MainWidget(QWidget *parent) :
     QWidget(parent)
@@ -22,10 +23,10 @@ void MainWidget::setupUi(QWidget *Form)
     Form->resize(400, 300);
     pushButton_generate = new QPushButton(Form);
     pushButton_generate->setObjectName(QStringLiteral("pushButton_generate"));
-    pushButton_generate->setGeometry(QRect(150, 30, 75, 23));
+
     horizontalLayoutWidget = new QWidget(Form);
     horizontalLayoutWidget->setObjectName(QStringLiteral("horizontalLayoutWidget"));
-    horizontalLayoutWidget->setGeometry(QRect(20, 20, 111, 41));
+
     horizontalLayout = new QHBoxLayout(horizontalLayoutWidget);
     horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
     horizontalLayout->setContentsMargins(0, 0, 0, 0);
@@ -46,10 +47,19 @@ void MainWidget::setupUi(QWidget *Form)
 
     gridLayoutWidget = new QWidget(Form);
     gridLayoutWidget->setObjectName(QStringLiteral("gridLayoutWidget"));
-    gridLayoutWidget->setGeometry(QRect(20, 80, 360, 200));
+
     gridLayout = new QGridLayout(gridLayoutWidget);
     gridLayout->setObjectName(QStringLiteral("gridLayout"));
     gridLayout->setContentsMargins(0, 0, 0, 0);
+    gridLayout->setSpacing(1);
+
+    // fill default text
+    Form->setWindowTitle(QApplication::translate("Form", "Form", nullptr));
+    pushButton_generate->setText(QApplication::translate("Form", "generate", nullptr));
+    lineEdit_width->setText(QApplication::translate("Form", "6", nullptr));
+    label_x->setText(QApplication::translate("Form", "X", nullptr));
+    lineEdit_height->setText(QApplication::translate("Form", "4", nullptr));
+
     retranslateUi(Form);
 
     QMetaObject::connectSlotsByName(Form);
@@ -62,12 +72,22 @@ void MainWidget::setupEvent()
 
 void MainWidget::retranslateUi(QWidget *Form)
 {
-    Form->setWindowTitle(QApplication::translate("Form", "Form", nullptr));
-    pushButton_generate->setText(QApplication::translate("Form", "generate", nullptr));
-    lineEdit_width->setText(QApplication::translate("Form", "6", nullptr));
-    label_x->setText(QApplication::translate("Form", "X", nullptr));
-    lineEdit_height->setText(QApplication::translate("Form", "4", nullptr));
+    pushButton_generate->setGeometry(QRect(150, 30, 75, 23));
+    horizontalLayoutWidget->setGeometry(QRect(20, 20, 110, 40));
+    gridLayoutWidget->setGeometry(QRect(20, 80, 360, 200));
+
+
 } // retranslateUi
+
+void MainWidget::gridClick(GridBox* self)
+{
+    if (self->text()=="1"){
+        self->setText("0");
+    } else{
+        self->setText("1");
+    }
+//    qDebug()<<self->objectName();
+}
 
 void MainWidget::drawGrid()
 {
@@ -76,30 +96,47 @@ void MainWidget::drawGrid()
         gMap = nullptr;
     }
 
+    // delete labelVector elements
     for (auto &e:labelVector){
         delete e;
     }
     labelVector.clear();
 
+    // get width, height from textbox
     int width = lineEdit_width->text().toInt();
     int height = lineEdit_height->text().toInt();
 
     if (0<width && 0<height){
-        gMap = new GridMap(width,height);
+        retranslateUi(this);
 
-        for (auto column=0; column<gMap->width; ++column){
-            for (auto row=0; row<gMap->height; ++row){
-                auto e = new QLabel(gridLayoutWidget);
-                //    e->setObjectName(QStringLiteral("label_1"));
+        // set geometry
+        auto geometry = gridLayoutWidget->geometry();
+        auto grid_width = geometry.width() / width;
+        auto grid_height = geometry.height() / height;
+        grid_width = grid_height = std::min(grid_width, grid_height);
+        geometry.setWidth(grid_width * width + (width - 1)); // space: (width - 1)
+        geometry.setHeight(grid_height * height + (height -1)); // space: (height -1)
+        gridLayoutWidget->setGeometry(geometry);
+
+        // create GridMap
+        gMap = new GridMap(width,height);
+        auto grid_num=0;
+        for (auto row=0; row<gMap->height; ++row){
+            for (auto column=0; column<gMap->width; ++column){
+                auto e = new GridBox(gridLayoutWidget);
+                e->setObjectName(QString::number(grid_num));
+                e->setFrameShape(QFrame::Panel);
                 e->setAlignment(Qt::AlignCenter);
-                auto str = QString::number(gMap->at(row,column));
-                e->setText(str);
-//                e->setText(QApplication::translate("Form", str, nullptr));
+                e->setText(QString::number(gMap->at(row,column)));
                 gridLayout->addWidget(e,row,column);
+                connect(e,SIGNAL(clicked(GridBox*)),this,SLOT(gridClick(GridBox*)));
                 labelVector.push_back(e);
+                ++grid_num;
             }
         }
 
     }
 
 }
+
+

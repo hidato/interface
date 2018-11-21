@@ -12,7 +12,8 @@ public:
     GridMap(int width, int height);
     ~GridMap();
 
-    int& at(int a, int b);
+    int& at(int row, int column);
+    int& at(int index);
 };
 
 #endif // TYPES_H
