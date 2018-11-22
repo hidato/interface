@@ -15,6 +15,8 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QWidget>
 #include <QtDebug>
+#include <QFileDialog>
+#include <QMessageBox>
 
 
 class MainWidget : public QWidget
@@ -25,6 +27,7 @@ public:
     explicit MainWidget(QWidget *parent = nullptr);
     ~MainWidget();
     QPushButton *pushButton_generate;
+    QPushButton *pushButton_save;
     QWidget *horizontalLayoutWidget;
     QHBoxLayout *horizontalLayout;
     QLineEdit *lineEdit_width;
@@ -43,6 +46,7 @@ public:
 public slots:
     void drawGrid();
     void gridClick(GridBox* self);
+    void saveGridAsFile();
 
 };
 

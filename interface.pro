@@ -28,11 +28,13 @@ SOURCES += \
         main.cpp \
     mainwidget.cpp \
     types.cpp \
+    gridbox.cpp \
     gridbox.cpp
 
 HEADERS += \
     mainwidget.h \
     types.h \
+    gridbox.h \
     gridbox.h
 
 # Default rules for deployment.
