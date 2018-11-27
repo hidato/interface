@@ -82,7 +82,6 @@ void MainWidget::retranslateUi(QWidget *Form)
     horizontalLayoutWidget->setGeometry(QRect(20, 20, 110, 40));
     gridLayoutWidget->setGeometry(QRect(20, 80, 360, 200));
 
-
 } // retranslateUi
 
 void MainWidget::gridClick(GridBox* self)
@@ -119,8 +118,8 @@ void MainWidget::saveGridAsFile()
             // write file
             QTextStream out(&file);
             out<<gMap->height<<' '<<gMap->width<<endl;
-            for (auto column=0; column<gMap->height; ++column){
-                for (auto row=0; row<gMap->width; ++row){
+            for (auto row=0; row<gMap->height; ++row){
+                for (auto column=0; column<gMap->width; ++column){
                     out<< gMap->at(row, column) << ' ';
                 }
                 out<<endl;
